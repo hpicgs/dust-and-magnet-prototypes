@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Explore your own CSV data with a simple Dust & Magnet workspace." />
+    <title>Dust & Magnet Explorer</title>
+    <script type="module" crossorigin src="/dust-and-magnet-prototypes/assets/index-5G8_YagZ.js"></script>
+    <link rel="modulepreload" crossorigin href="/dust-and-magnet-prototypes/assets/modulepreload-polyfill-Dezn_h7o.js">
+    <link rel="modulepreload" crossorigin href="/dust-and-magnet-prototypes/assets/numberParsing-CrA8g1wW.js">
+    <link rel="modulepreload" crossorigin href="/dust-and-magnet-prototypes/assets/referencePlaneBounds-Cjirl6oq.js">
+    <link rel="modulepreload" crossorigin href="/dust-and-magnet-prototypes/assets/registry-je-iGTjD.js">
+    <link rel="stylesheet" crossorigin href="/dust-and-magnet-prototypes/assets/index-DFe8hdn0.css">
+  </head>
+  <body>
+    <header class="explorer-header"><a class="wordmark" id="directory-link" href="../site/">Dust <span>&</span> Magnet</a><span class="explorer-title">Explorer</span><a class="research-link" id="research-link" href="../">Research prototype ↗</a></header>
+    <div class="explorer-layout">
+      <aside class="controls-panel" aria-label="Explorer controls">
+        <p class="eyebrow">Your workspace</p><h1>Follow the pull<br />of your data.</h1>
+        <p class="intro">Each row becomes a particle. Magnets pull particles toward high values in a column.</p>
+        <div class="file-actions"><button class="button load-control" id="load-csv" disabled>Load CSV</button><button class="button secondary load-control" id="example" disabled>Try an example</button></div>
+        <input type="file" id="csv-file" accept=".csv,text/csv,text/plain" hidden />
+        <p class="small muted">Your data stays in this browser.</p>
+        <div class="dataset-summary" id="dataset-summary">No dataset loaded</div>
+        <section class="control-section"><div class="section-label"><h2>Magnets</h2><span id="magnet-count">0</span></div><p class="small muted">Drag a magnet in the scene to explore. Negative strength pushes particles away.</p><div class="add-magnet"><select class="dataset-control" id="magnet-feature" aria-label="Column for a new magnet" disabled></select><button class="button secondary dataset-control" id="add-magnet" disabled>Add</button></div><div id="magnet-list"></div></section>
+        <section class="control-section"><h2>Particle color</h2><label class="small" for="color-feature">Color by column</label><select class="dataset-control" id="color-feature" disabled><option value="-1">One color</option></select><div id="color-legend" hidden><span>Low</span><div></div><span>High</span></div></section>
+        <div class="session-actions"><button class="button secondary dataset-control" id="save-session" disabled>Save session</button><button class="text-button dataset-control" id="reset-magnets" disabled>Reset magnets</button></div>
+      </aside>
+      <main class="workspace-panel">
+        <div class="workspace-toolbar"><span id="scene-title">A space to explore</span><button class="button secondary dataset-control" id="fit-view" disabled>Fit view</button></div>
+        <div class="scene" id="scene" tabindex="0" aria-label="Visualization. The dashed outline marks particle placement limits. Drag magnets, drag empty space to pan, scroll to zoom, and click particles to inspect them.">
+          <canvas id="scene-canvas" aria-label="Dataset particle visualization"></canvas><div id="layout-boundary" aria-hidden="true" hidden></div><div id="scene-magnets"></div>
+          <div class="empty-state" id="empty-state"><div class="empty-symbol" aria-hidden="true">✦</div><h2>Begin with a question.<br />Bring a CSV.</h2><p>Choose numeric columns, then move their magnets.<br />Or try a small example to get a feel for it.</p><span class="small muted">Drop a CSV here to begin</span></div>
+          <div class="scene-help">Drag magnets · Drag space to pan · Scroll to zoom · Click a particle</div>
+        </div>
+        <div class="workspace-status" id="status" role="status" aria-live="polite">Checking browser support…</div>
+        <section class="row-inspector" id="row-inspector" aria-labelledby="row-heading" tabindex="0" hidden><div class="section-label"><h2 id="row-heading">Selected row</h2><button class="text-button" id="clear-selection">Clear selection</button></div><p class="small muted" id="pick-note"></p><dl id="row-values"></dl></section>
+      </main>
+    </div>
+    <dialog id="import-dialog" aria-labelledby="import-heading">
+      <h2 id="import-heading">Choose your columns</h2><p class="muted small">Select numeric columns for magnets. Other columns are retained for row inspection.</p>
+      <div class="import-options"><label>Separator <select id="csv-delimiter"><option value=",">Comma</option><option value=";">Semicolon</option><option value="tab">Tab</option></select></label><label><input type="checkbox" id="csv-header" /> First row contains column names</label></div>
+      <fieldset id="import-columns"><legend>Numeric feature columns</legend><div id="column-choices"></div></fieldset>
+      <div class="table-scroll"><table id="import-preview"></table></div>
+      <p class="small muted">Feature values use the research prototype’s 2nd–98th percentile scaling, clipped to 0–1. Original values are kept. Missing or nonnumeric values in selected columns must be corrected before loading.</p>
+      <p id="import-error" class="error-message" role="alert"></p>
+      <div class="dialog-actions"><button class="button secondary" id="cancel-import">Cancel</button><button class="button" id="confirm-import">Explore this data</button></div>
+    </dialog>
+    <dialog id="session-import-dialog" aria-labelledby="session-import-heading" aria-describedby="session-import-description">
+      <h2 id="session-import-heading">Explore the dataset from this session?</h2>
+      <p class="muted small" id="session-import-reason"></p>
+      <p id="session-import-description">Load the rows and feature columns into a fresh Explorer workspace with starter magnets. Restore saved analyses, snapshots, magnets, and appearance settings in the research prototype.</p>
+      <p class="small muted" id="session-import-summary"></p>
+      <p id="session-import-error" class="error-message" role="alert"></p>
+      <div class="dialog-actions"><a class="button secondary" id="session-research-link" href="../">Research prototype ↗</a><button class="button secondary" id="cancel-session-import">Cancel</button><button class="button" id="confirm-session-import">Load dataset only</button></div>
+    </dialog>
+    <noscript><p>Enable JavaScript to explore CSV data.</p></noscript>
+  </body>
+</html>
